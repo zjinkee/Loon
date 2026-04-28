@@ -1,0 +1,17 @@
+#!name = 酷安
+#!desc = 更新时间2026-04-29
+#!icon = https://static.coolapk.com/static/web/v8/images/header-logo.png
+
+[Rewrite]
+^https:\/\/api\.coolapk\.com\/v6\/search response-body-json-jq 'del(.data[]|select(.entityId==16977 or .entityId==20252))'
+^https:\/\/api\.coolapk\.com\/v6\/feed\/detail response-body-json-jq 'del(.data.include_goods,.data.include_goods_ids,.data.detailSponsorCard,.data.targetRow,.data.tcat)'
+^https:\/\/api\.coolapk\.com\/v6\/feed\/replyList response-body-json-jq 'del(.data[]|select(.entityTemplate=="feedDetailReplySponsorCard"))'
+^https:\/\/api\.coolapk\.com\/v6\/main\/indexV8 response-body-json-jq 'del(.data[]|select(.extraDataArr.cardId==29349 or .extraDataArr.cardId==29519 or .extraDataArr.cardId==32557 or .entityTemplate=="sponsorCard"))'
+^https:\/\/api\.coolapk\.com\/v6\/page\/dataList response-body-json-jq 'del(.data[]|select(.entityId==24309 or .entityId==12889 or .entityId==40933 or .entityId==40573 or .entityId==14675 or .entityId==39609 or .entityId==41629 or .entityId==32618 or .entityId==28773 or .entityTemplate=="sponsorCard"))'
+^https:\/\/api\.coolapk\.com\/v6\/account\/loadConfig response-body-json-jq 'del(.data[]|select(.entityId==14809 or .entityId==1002))'
+
+[Script]
+http-response ^https:\/\/api\.coolapk\.com\/v6\/main\/init script-path=https://github.com/zjinkee/script/raw/refs/heads/main/CoolAPK.js, requires-body=true, timeout=60, tag=广告处理
+
+[Mitm]
+hostname = api.coolapk.com
