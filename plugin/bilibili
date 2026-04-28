@@ -1,0 +1,23 @@
+#!name = 哔哩哔哩
+#!desc = 更新时间2026-04-29
+#!icon = https://www.tapafun.com/wp-content/uploads/2024/11/bilibili.png
+
+[Rewrite]
+^https:\/\/api\.live\.bilibili\.com\/xlive\/e-commerce-interface\/v1\/ecommerce-user\/get_shopping_info\? reject-dict
+^https:\/\/api\.bilibili\.com\/(x\/(resource\/(top\/activity|patch\/tab(\/v2)?)|vip\/ads\/materials)|pgc\/activity\/deliver\/material\/receive)\? reject-dict
+^https:\/\/api\.bilibili\.com\/x\/pd-proxy\/tracker\? response-body-json-jq '.data[][]?="stun.chat.bilibili.com:3478"'
+^https:\/\/api\.bilibili\.com\/pgc\/page\/cinema\/tab response-body-json-jq 'del(.result.modules[]|select(.module_id==1633))'
+^https:\/\/api\.bilibili\.com\/pgc\/page\/bangumi response-body-json-jq 'del(.result.modules[]|select(.module_id==1639))'
+^https:\/\/app\.bilibili\.com\/x\/v2\/splash response-body-json-jq '.data.list=[]|.data.show=[]|.data.min_interval=630720000|.data.pull_interval=630720000'
+^https:\/\/app\.bilibili\.com\/x\/v2\/search response-body-json-jq '.data|=map(select(.type!="recommend")|del(.search_ranking_meta))'
+^https:\/\/app\.bilibili\.com\/x\/v2\/feed\/index\/story response-body-json-jq '.data.items|=map(select(.is_ad!=true and (has("ad_info")|not) and .goto!="ad_av" and .goto!="vertical_ad"))'
+^https:\/\/app\.bilibili\.com\/x\/v2\/feed\/index/? response-body-json-jq '.data.items|=map(select(.ad_info.is_ad_loc!=true and (.card_type|test("banner_")|not)))'
+^https:\/\/app\.bilibili\.com\/x\/resource\/show\/tab\/v2 response-body-json-jq '.data.tab|=[(.[]|select(.id==40)),(.[]|select(.id==41)),(.[]|select(.id==3502)),(.[]|select(.id==3503)),(.[]|select(.id==39))]|.data.bottom|=map(select(.id|IN(177,179,181)))|.data.top|=map(select(.id==3510))|.data.top_more=[]|.data.top_left=[]'
+^https:\/\/app\.bilibili\.com\/x\/v2\/account\/mine\? response-body-json-jq '.data.modular_vip_section=null|.data.sections_v2|=[.[]|select(.type!=1 and .type!=4)|(if .title=="更多服务" then .title="" else . end)|.items|=[.[]|select(.id|IN(812,964)|not)|if .id==410 then.+{title:"我的设置"}else . end]|select(.items|length>0)]'
+^https:\/\/app\.bilibili\.com\/x\/v2\/account\/mine\/ipad response-body-json-jq 'del(.data.ipad_upper_sections)|.data.ipad_recommend_sections|=map(select(.id|IN(2541,758,759)|not))|.data.ipad_more_sections|=map(select(.id!=965)|if .id==764 then .title="我的设置" else . end)'
+
+[Script]
+http-response ^https:\/\/(grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.(app\.(show\.v1\.Popular\/Index|dynamic\.v2\.Dynamic\/DynAll|view(unite)?\.v1\.View\/(View|ViewProgress|RelatesFeed)|playurl\.v1\.PlayURL\/PlayView|playerunite\.v1\.Player\/PlayViewUnite)|polymer\.app\.search\.v1\.Search\/SearchAll|community\.service\.dm\.v1\.DM\/DmView|main\.community\.reply\.v1\.Reply\/MainList|pgc\.gateway\.player\.v2\.PlayURL\/PlayView)$ script-path=https://raw.githubusercontent.com/kokoryh/Sparkle/master/dist/bilibili.protobuf.response.js, requires-body=true, binary-body-mode=true, tag=广告处理
+
+[MitM]
+hostname = app.bilibili.com,api.bilibili.com,grpc.biliapi.net,api.live.bilibili.com
