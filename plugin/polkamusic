@@ -1,0 +1,22 @@
+#!name = 波点音乐
+#!desc = 更新时间2026-04-29
+#!icon = https://img.51wan.com/up/2025-12/2025035499939849.png
+
+[Argument]
+VIP=switch,true,false,tag=解锁播放
+
+[Rewrite]
+^https:\/\/ad\.tencentmusic\.com\/(sdk\/config|sdk\/ad\/strategies|config\/uni) reject-200
+^https:\/\/(bd-api\.kuwo\.cn\/api\/(service\/conf\/all|popup\/scene\/info|service\/banner\/positions|play\/advert\/info|service\/global\/config\/vipEnter|service\/advert\/config|search\/topic\/word\/list|pay\/vip\/invitation|pay\/vip\/lowPriceText|advert\/free\/config|service\/collect\/\d+\/fans|play\/listening\/user)|ab-bodian\.kuwo\.cn\/abtest\/ui\/info|xs\.gdt\.qq\.com\/style_factory) mock-response-body data-type=json data="{"data":{},"code":439}" status-code=200
+^https:\/\/us\.l\.qq\.com\/exapp response-body-json-jq '.data[].list=[]'
+^https:\/\/bd-api\.kuwo\.cn\/api\/play\/sound\/effect\/list response-body-json-jq '.data.list|=map(.vipType="free"|.audition=0)'
+^https:\/\/bd-api\.kuwo\.cn\/api\/voice\/room\/v2\/sidebar response-body-json-jq '.data.sidebar[].coverGif=""|.data.sidebar|=map(select(.id!=1 and .id!=32 and .id!=21 and .id!=17 and .id!=18 and .id!=30 and .id!=26 and .id!=25 and .id!=28 and .id!=3))'
+^https:\/\/bd-api\.kuwo\.cn\/api\/service\/home\/index response-body-json-jq '.data.moduleList|=map(select(.type!=8 and .type!=1 and .type!=2 and .type!=9 and .type!=6 and .type!=12 and .type!=7))'
+^https:\/\/bd-api\.kuwo\.cn\/api\/service\/global\/config\/scene response-body-json-jq '.data={showShopEntry:false}'
+
+[Script]
+http-response ^https:\/\/bd-api\.kuwo\.cn\/.*(audioUrl|checkRight|music\/info|download|audition) script-path=https://raw.githubusercontent.com/WeiGiegie/666/main/bdyy.js, requires-body=true, timeout=60, enable={VIP}, tag=解锁播放
+http-response ^https:\/\/bd-api\.kuwo\.cn\/.*(users\/(pub|login)) script-path=https://github.com/zjinkee/script/raw/refs/heads/main/PolkaVIP.js, requires-body=true, timeout=60, tag=配置会员
+
+[Mitm]
+hostname = us.l.qq.com,xs.gdt.qq.com,ad.tencentmusic.com,ab-bodian.kuwo.cn,bd-api.kuwo.cn
