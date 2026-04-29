@@ -3,7 +3,7 @@
 #!icon = https://img.51wan.com/up/2025-12/2025997467696142.png
 
 [Rewrite]
-^https:\/\/gateway\.kugou\.com\/goddess\/v1\/content\/biz_list reject-200
+^https:\/\/gateway\.kugou\.com\/(goddess\/v1\/content\/biz_list|ads.service) reject-200
 ^https:\/\/gateway\.kugou\.com\/youth\/v1\/experiment\/get_params response-body-json-jq '.data.olexp_params.flash_ad_show=0|.data.olexp_params.popup_show=0'
 ^https:\/\/gateway\.kugou\.com\/youth\/v1\/ab\/tmeab\?ab_source=TMEAB0tgviptype0type response-body-json-jq '.data.TMEAB0tgviptype0type.mapParams.Insert_ads_mode="0"|.data.TMEAB0tgviptype0type.mapParams.Insert_ads_drag="0"|.data.TMEAB0tgviptype0type.mapParams.Insert_ads_timing="0"|.data.TMEAB0tgviptype0type.mapParams.Insert_ads_point="0"|.data.TMEAB0tgviptype0type.mapParams.vip_free_times="999"|.data.TMEAB0tgviptype0type.mapParams.vip_free_timeperiod="999"|.data.TMEAB0tgviptype0type.mapParams.songs_pop_ups_max="0"|.data.TMEAB0tgviptype0type.mapParams.singlesong_pop_ups_max="0"|.data.TMEAB0tgviptype0type.mapParams.hide_tvbar="0"'
 ^https:\/\/gateway\.kugou\.com\/youth\/v1\/ab\/tmeab\?ab_source=changtingdaily response-body-json-jq '.data.TMEAB0ad0type.mapParams|=with_entries(.value="0")|.data.viphide.mapParams.song_mode_unvipsong="0"|.data.viphide.mapParams.song_mode_hide="0"|.data.viphide.mapParams.video_play_hide="0"|.data.TMEAB0sharefree0type.mapParams.share_free="1"|.data.TMEAB0vipplay0type.mapParams.vipplay_type="0"|.data.TMEAB0vipplay0type.mapParams.ad_seconds="0"|.data.TMEAB0audition0type.mapParams.secs="999"'
