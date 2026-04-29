@@ -1,5 +1,5 @@
 #!name = 波点音乐
-#!desc = 更新时间2026-04-29
+#!desc = 更新时间2026-04-30
 #!icon = https://img.51wan.com/up/2025-12/2025035499939849.png
 
 [Argument]
@@ -7,7 +7,7 @@ VIP=switch,true,false,tag=解锁播放
 
 [Rewrite]
 ^https:\/\/ad\.tencentmusic\.com\/(sdk\/config|sdk\/ad\/strategies|config\/uni) reject-200
-^https:\/\/us\.l\.qq\.com\/exapp response-body-json-jq '.data|=with_entries(.value.list|=map(if .is_empty==1 then .stay_report_url=""|.negative_feedback_url=""|.video_report_url=""|.original_exposure_url=""|.landing_page_report_url=""|.effect_url="" else . end))'
+^https:\/\/us\.l\.qq\.com\/exapp response-body-json-jq '.data[]|=(.list=[]|.is_empty=1)'
 ^https:\/\/(bd-api\.kuwo\.cn\/api\/(service\/conf\/all|popup\/scene\/info|service\/banner\/positions|play\/advert\/info|service\/global\/config\/vipEnter|service\/advert\/config|search\/topic\/word\/list|pay\/vip\/invitation|pay\/vip\/lowPriceText|advert\/free\/config|service\/collect\/\d+\/fans|play\/listening\/user)|ab-bodian\.kuwo\.cn\/abtest\/ui\/info|xs\.gdt\.qq\.com\/style_factory) response-body-json-jq '{"data":{},"code":439}'
 ^https:\/\/bd-api\.kuwo\.cn\/api\/play\/sound\/effect\/list response-body-json-jq '.data.list|=map(.vipType="free"|.audition=0)'
 ^https:\/\/bd-api\.kuwo\.cn\/api\/voice\/room\/v2\/sidebar response-body-json-jq '.data.sidebar[].coverGif=""|.data.sidebar|=map(select(.id!=1 and .id!=32 and .id!=21 and .id!=17 and .id!=18 and .id!=30 and .id!=26 and .id!=25 and .id!=28 and .id!=3))'
