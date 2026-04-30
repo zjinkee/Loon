@@ -12,7 +12,7 @@ VIP=switch,true,false,tag=解锁播放
 ^https:\/\/bd-api\.kuwo\.cn\/api\/voice\/room\/v2\/sidebar response-body-json-jq '.data.sidebar[].coverGif=""|.data.sidebar|=map(select(.id!=1 and .id!=32 and .id!=21 and .id!=17 and .id!=18 and .id!=30 and .id!=26 and .id!=25 and .id!=28 and .id!=3))'
 ^https:\/\/bd-api\.kuwo\.cn\/api\/service\/home\/index response-body-json-jq '.data.moduleList|=map(select(.type!=8 and .type!=1 and .type!=2 and .type!=9 and .type!=6 and .type!=12 and .type!=7))'
 ^https:\/\/bd-api\.kuwo\.cn\/api\/service\/global\/config\/scene response-body-json-jq '.data={showShopEntry:false}'
-^https:\/\/us\.l\.qq\.com\/exapp response-body-json-jq '.data[]|=(.is_empty=1|.ret=1|.list=[{"timelife":0,"video_timelife":0,"endtime":1,"is_empty":1}])|.reqinterval=0|.rpt=1'
+^https:\/\/us\.l\.qq\.com\/exapp response-body-json-jq '.data[]|=(.is_empty=0|.ret=0|.list=[{"video":"","timelife":0,"endtime":0,"begintime":9999999999}])|.rpt=0'
 
 [Script]
 http-response ^https:\/\/bd-api\.kuwo\.cn\/.*(audioUrl|checkRight|music\/info|download|audition) script-path=https://raw.githubusercontent.com/WeiGiegie/666/main/bdyy.js, requires-body=true, timeout=60, enable={VIP}, tag=解锁播放
