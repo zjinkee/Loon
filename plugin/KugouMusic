@@ -4,6 +4,7 @@
 
 [Rewrite]
 ^https:\/\/gateway\.kugou\.com\/(goddess\/v1\/content\/biz_list|ads.service|ads.gateway) reject-200
+^https:\/\/adservice\.kugou\.com\/v2\/lite_v_youth_task_center response-body-json-jq 'del(.data.ads.lite_v_youth_task_center_link[].copywriting)'
 ^https:\/\/gateway\.kugou\.com\/youth\/v1\/channel\/tab_list response-body-json-jq '.data.list|=map(select((.tab_id==-1or.tab_id==2)|not))'
 ^https:\/\/gateway\.kugou\.com\/card\/v1\/pxy response-body-json-jq '.data.responses|=map(select(.module!="y_lab"and.module!="y_hot"and.module!="y_song_module_6"and.module!="y_tag"))'
 ^https:\/\/gateway\.kugou\.com\/youth\/v1\/account\/get_vip_tips response-body-json-jq '.data.account_tips.title="增强无广告"'
@@ -14,4 +15,4 @@
 ^https:\/\/us\.l\.qq\.com\/exapp response-body-json-jq '.data[]|=(.is_empty=1|.ret=1|.list=[{"timelife":0,"video_timelife":0,"endtime":1,"is_empty":1}])|.reqinterval=0|.rpt=1'
 
 [Mitm]
-hostname = us.l.qq.com,gateway.kugou.com
+hostname = us.l.qq.com,adservice.kugou.com,gateway.kugou.com
