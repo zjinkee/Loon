@@ -1,22 +1,24 @@
 #!name = 波点音乐
-#!desc = 更新时间2026-04-30
+#!desc = 更新时间2026-05-01
 #!icon = https://img.51wan.com/up/2025-12/2025035499939849.png
 
 [Argument]
 VIP=switch,true,false,tag=解锁播放
 
 [Rewrite]
-^https:\/\/ad\.tencentmusic\.com\/(sdk\/config|sdk\/ad\/strategies|config\/uni) reject-200
-^https:\/\/(bd-api\.kuwo\.cn\/api\/(service\/conf\/all|popup\/scene\/info|service\/banner\/positions|play\/advert\/info|service\/global\/config\/vipEnter|service\/advert\/config|search\/topic\/word\/list|pay\/vip\/invitation|pay\/vip\/lowPriceText|advert\/free\/config|service\/collect\/\d+\/fans|play\/listening\/user)|ab-bodian\.kuwo\.cn\/abtest\/ui\/info|xs\.gdt\.qq\.com\/style_factory) response-body-json-jq '{"data":{},"code":439}'
-^https:\/\/bd-api\.kuwo\.cn\/api\/play\/sound\/effect\/list response-body-json-jq '.data.list|=map(.vipType="free"|.audition=0)'
-^https:\/\/bd-api\.kuwo\.cn\/api\/voice\/room\/v2\/sidebar response-body-json-jq '.data.sidebar[].coverGif=""|.data.sidebar|=map(select(.id!=1 and .id!=32 and .id!=21 and .id!=17 and .id!=18 and .id!=30 and .id!=26 and .id!=25 and .id!=28 and .id!=3))'
-^https:\/\/bd-api\.kuwo\.cn\/api\/service\/home\/index response-body-json-jq '.data.moduleList|=map(select(.type!=8 and .type!=1 and .type!=2 and .type!=9 and .type!=6 and .type!=12 and .type!=7))'
-^https:\/\/bd-api\.kuwo\.cn\/api\/service\/global\/config\/scene response-body-json-jq '.data={showShopEntry:false}'
+^https:\/\/bd-api\.kuwo\.cn\/api\/(service\/advert\/config|play\/advert\/info|service\/banner\/positions|pay\/vip\/invitation|search\/topic\/word\/list|advert\/free\/config|pay\/vip\/lowPriceText) mock-response-body data-type=json data="{"code": 439,"data":{},"msg":"success","profileId": "site"}" status-code=200
+^https:\/\/bd-api\.kuwo\.cn\/api\/service\/global\/config\/vipEnter mock-response-body data-type=json data="{"code":200,"data":{"fristVipSingleBtn":0,"fristVipListBtn":0,"fristVipPlayBtn":0},"msg":"success","profileId":"site"}" status-code=200
 ^https:\/\/us\.l\.qq\.com\/exapp response-body-json-jq '.data[]|=(.is_empty=0|.ret=0|.list=[{"video":"","timelife":0,"endtime":0,"begintime":9999999999}])|.rpt=0'
+^https:\/\/ab-bodian\.kuwo\.cn\/abtest\/ui\/info response-body-json-jq '.data.mapTestInfo.BDLaunchApp.mapParams.ad_type="0"|.data.mapTestInfo.BDLaunchApp.mapParams.launchApp="0"|.data.mapTestInfo.ZS9ad.mapParams.9ad="0"|.data.mapTestInfo["9Ad"].mapParams["9Ad"]="0"|.data.mapTestInfo.PopIntervalSeconds.mapParams.interval_seconds="999999"|.data.mapTestInfo.adExpiresFreemodeShowad.mapParams.rewardReqNewBeforeShow="0"|.data.mapTestInfo.adExpiresFreemodeShowad.mapParams.allowRepeatRequest="0"'
+^https:\/\/bd-api\.kuwo\.cn\/api\/play\/sound\/effect\/list response-body-json-jq '.data.list|=map(.vipType="free"|.audition=0)'
+^https:\/\/bd-api\.kuwo\.cn\/api\/service\/conf\/all response-body-json-jq '.data.groupSign.adExitChange=0|.data.groupSign.adGuideTest=0|.data.groupSign.adStartAppDialog=0|.data.groupSign.recommendTest=0|.data.groupSign.treeHoleFeedPercent=0|.data.groupSign.playTips=0|.data.conf.adDownListOpen=0|.data.conf.adGuidePopCount=0|.data.conf.delayPopSecond=999999|.data.conf.activity_best_switch="0"|.data.conf.isOpenImport=true|.data.conf.enableQrcodeEnter=true'
+^https:\/\/bd-api\.kuwo\.cn\/api\/voice\/room\/v2\/sidebar response-body-json-jq '.data.sidebar|=map(select(.id==4or.id==30or.id==3or.id==10or.id==31)|.coverGif=""|.name=(if .id==4then"驾车节奏"elif .id==30then"轻松通勤"elif .id==3then"夜间情绪"elif .id==10then"助眠时刻"elif .id==31then"微醺氛围"else.name end))'
+^https:\/\/bd-api\.kuwo\.cn\/api\/service\/home\/index response-body-json-jq '.data.moduleList|=map(select(.type==4or.type==3or.type==10or.type==7or.type==5))'
+^https:\/\/bd-api\.kuwo\.cn\/api\/service\/global\/config\/scene response-body-json-jq '.data.showShopEntry=false|.data.AllDialogIntervals=999999|.data.adsNotFinishVipPop4DayInterval=999999|.data.playingPageCollectPagList=[]|.data.warmStartDialog.count=0|.data.warmStartDialog.interval=999999|.data.playingPageOutCommentConfig.interval=999999|.data.playFeedDayCount=0|.data.offlineFavTipsGuide=0|.data.downLoadZoneConfig.freeTimeRemindTip=0'
+^https:\/\/bd-api\.kuwo\.cn\/api/ucenter\/users\/(pub|login) response-body-json-jq '.data.payInfo|=(.isSignedBoolean=true|.isCtVipBoolean=true|.isCtPayVipBoolean=true|.isVip=1|.isVipBoolean=true|.isBigVipBoolean=true|.isBigPayVipBoolean=true|.isPayVipBoolean=true|.isActVipBoolean=true|.isSigned=1|.isFreeCtVip=true|.vipType=1|.payVipType=1|.actVipType=1|.signType=1|.ctExpireDate=2524608000000|.bigExpireDate=2524608000000|.bigPayExpireDate=2524608000000|.payExpireDate=2524608000000|.actExpireDate=2524608000000|.ctPayExpireDate=2524608000000|.expireDate=2524608000000)|.data.userInfo|=(.isVip=1|.vipType=1|.authType=1|.payVipType=1)'
 
 [Script]
 http-response ^https:\/\/bd-api\.kuwo\.cn\/.*(audioUrl|checkRight|music\/info|download|audition) script-path=https://raw.githubusercontent.com/WeiGiegie/666/main/bdyy.js, requires-body=true, timeout=60, enable={VIP}, tag=解锁播放
-http-response ^https:\/\/bd-api\.kuwo\.cn\/.*(users\/(pub|login)) script-path=https://github.com/zjinkee/script/raw/refs/heads/main/PolkaVIP.js, requires-body=true, timeout=60, tag=配置会员
 
 [Mitm]
-hostname = us.l.qq.com,xs.gdt.qq.com,ad.tencentmusic.com,ab-bodian.kuwo.cn,bd-api.kuwo.cn
+hostname = us.l.qq.com,bd-api.kuwo.cn,ab-bodian.kuwo.cn
