@@ -6,7 +6,7 @@
 ^https:\/\/gateway\.kugou\.com\/(goddess\/v1\/content\/biz_list|ads.service|ads.gateway) reject-200
 ^https:\/\/adservice\.kugou\.com\/v2\/lite_v_youth_task_center response-body-json-jq 'del(.data.ads.lite_v_youth_task_center_link[].copywriting)'
 ^https:\/\/gateway\.kugou\.com\/youth\/v1\/channel\/tab_list response-body-json-jq '.data.list|=map(select((.tab_id==-1or.tab_id==2)|not))'
-^https:\/\/gateway\.kugou\.com\/card\/v1\/pxy response-body-json-jq '.data.card_rank=[]|.data.responses|=map(select(.module!="y_lab"and.module!="y_hot"and.module!="y_song_module_6"and.module!="y_tag"))'
+^https:\/\/gateway\.kugou\.com\/card\/v1\/pxy response-body-json-jq 'del(.data.card_rank)|.data.responses|=map(select(.module!="y_lab"and.module!="y_hot"and.module!="y_song_module_6"and.module!="y_tag"))'
 ^https:\/\/gateway\.kugou\.com\/youth\/v1\/account\/get_vip_tips response-body-json-jq '.data.account_tips.title="增强无广告"'
 ^https:\/\/gateway\.kugou\.com\/youth\/v1\/experiment\/get_params response-body-json-jq '.data.olexp_params.flash_ad_show=0|.data.olexp_params.popup_show=0'
 ^https:\/\/gateway\.kugou\.com\/youth\/v1\/ab\/tmeab\?ab_source=TMEAB0tgviptype0type response-body-json-jq '.data.TMEAB0tgviptype0type.mapParams.Insert_ads_mode="0"|.data.TMEAB0tgviptype0type.mapParams.Insert_ads_drag="0"|.data.TMEAB0tgviptype0type.mapParams.Insert_ads_timing="0"|.data.TMEAB0tgviptype0type.mapParams.Insert_ads_point="0"|.data.TMEAB0tgviptype0type.mapParams.vip_free_times="999"|.data.TMEAB0tgviptype0type.mapParams.vip_free_timeperiod="999"|.data.TMEAB0tgviptype0type.mapParams.songs_pop_ups_max="0"|.data.TMEAB0tgviptype0type.mapParams.singlesong_pop_ups_max="0"|.data.TMEAB0tgviptype0type.mapParams.hide_tvbar="0"'
