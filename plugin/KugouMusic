@@ -1,9 +1,9 @@
 #!name = 酷狗音乐
-#!desc = 更新时间2026-04-30
+#!desc = 更新时间2026-05-03
 #!icon = https://img.51wan.com/up/2025-12/2025997467696142.png
 
 [Rewrite]
-^https:\/\/gateway\.kugou\.com\/(goddess\/v1\/content\/biz_list|ads.service|ads.gateway) reject-200
+^https:\/\/gateway\.kugou\.com\/(goddess\/v1\/content\/biz_list|ads.service|ads.gateway|youth\/v2\/activity\/task_list) reject-200
 ^https:\/\/adservice\.kugou\.com\/v2\/lite_v_youth_task_center response-body-json-jq 'del(.data.ads.lite_v_youth_task_center_link[].copywriting)'
 ^https:\/\/gateway\.kugou\.com\/youth\/v1\/channel\/tab_list response-body-json-jq '.data.list|=map(select((.tab_id==-1or.tab_id==2)|not))'
 ^https:\/\/gateway\.kugou\.com\/card\/v1\/pxy response-body-json-jq '.data.responses|=map(select(.module!="y_lab"and.module!="y_hot"and.module!="y_song_module_6"and.module!="y_tag"))'
