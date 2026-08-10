@@ -1,0 +1,11 @@
+#!name = 每日一句
+#!desc = 每天推送一句话会附上嘿嘿图 可自定时间随时推送\n\n早中晚推送一次：0 8,12,18 * * *\n每小时推送一次：0 * * * *
+#!icon = https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/94/d4/4a/94d44a6e-1d4b-3285-f67b-a45a526e101b/AppIcon-0-0-1x_U007emarketing-0-8-0-85-220.png/512x512bb.png
+
+[Argument]
+swch = switch,false,tag = 启用插件
+time = input, "0 * * * *", tag = 设置时间
+type = select,"音乐","网络","文学","诗词","影视","动画","游戏","哲学","原创","机灵",tag=话题类型
+
+[Script]
+cron {time} script-path=https://github.com/zjinkee/js/raw/refs/heads/main/textpush.js, timeout=10, tag=每日一句, enable={swch}, argument=[{type}]
