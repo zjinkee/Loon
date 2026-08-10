@@ -1,0 +1,7 @@
+#!name = 节点检测
+#!desc = 节点IP风险欺诈与位置信息查询
+#!icon = https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/a0/5a/61/a05a618b-c0c5-2aef-f4d1-cf8b72f2b653/AppIcon-0-0-1x_U007emarketing-0-8-0-85-220.png/512x512bb.png
+
+[Script]
+generic script-path=https://github.com/zjinkee/js/raw/refs/heads/main/iprisk.js, timeout=15, tag=IP风险, img-url=checkerboard.shield
+generic script-path=https://github.com/zjinkee/js/raw/refs/heads/main/nodemap.js, timeout=30, tag=IP位置, img-url=globe
