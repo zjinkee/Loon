@@ -10,4 +10,4 @@ key  = input, "", tag = KEY
 host = input, "", tag = HOST
 
 [Script]
-cron {time} script-path=https://github.com/zjinkee/js/raw/refs/heads/main/weather.js, timeout=10, tag=天气查询, enable={swch}, argument=[{name},{key},{host}]
+cron {time} script-path=https://github.com/zjinkee/js/raw/refs/heads/main/weather.js, tag=天气查询, enable={swch}, argument=[{name},{key},{host}]
