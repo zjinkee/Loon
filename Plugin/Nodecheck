@@ -1,5 +1,5 @@
 #!name = 节点检测
-#!desc = 节点IP风险欺诈与位置信息查询
+#!desc = IP风险欺诈查询四个数据源提供参考和IP位置信息查询 
 #!icon = https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/a0/5a/61/a05a618b-c0c5-2aef-f4d1-cf8b72f2b653/AppIcon-0-0-1x_U007emarketing-0-8-0-85-220.png/512x512bb.png
 
 [Script]
