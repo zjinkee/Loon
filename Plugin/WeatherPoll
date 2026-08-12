@@ -1,9 +1,9 @@
 #!name = 天气预警
-#!desc = 自定义时间每天主动提醒实时天气 查询数据源于和风天气仅供参考\n\n说明：需要自行注册和风天气开发账号申请获取Key和Host用于鉴权发起查询请求\n\n时间使用：分 时 日 月 周
+#!desc = 自定义时间每天主动提醒实时天气 查询数据源于和风天气仅供参考
 #!icon = https://is1-ssl.mzstatic.com/image/thumb/Purple112/v4/17/6d/1c/176d1c78-75d4-64cc-ee9c-522a38ff1d78/AppIcon-0-0-1x_U007emarketing-0-0-0-2-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.png
 
 [Argument]
-swch = switch,true,tag = 启用插件
+swch = switch,false,tag = 启用插件
 time = input, "", tag = 设置时间
 name = input, "", tag = 填写城市
 key  = input, "", tag = KEY
