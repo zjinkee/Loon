@@ -1,9 +1,0 @@
-#!name = Safari游览器
-#!desc = 搜索307重定向到谷歌搜索
-#!icon = https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/23/4c/cb/234ccbb4-e65a-bb94-f877-3d230743e9e3/safari-0-0-1x_U007epad-0-1-0-sRGB-85-220.png/512x512bb.png
-
-[Rewrite]
-request if ${url} ~= /^https:\/\/www\.google\.cn/i then redirect(307, "https://www.google.com")
-
-[Mitm]
-hostname = www.google.cn
