@@ -4,8 +4,8 @@
 
 [Argument]
 swch = switch,false,tag = 启用插件
-time = input, "0 * * * *", tag = 设置时间
+time = input, "0 6-22 * * *", tag = 设置时间
 type = select,"音乐","网络","文学","诗词","影视","动画","游戏","哲学","原创","机灵",tag=话题类型
 
 [Script]
-cron {time} script-path=https://github.com/zjinkee/js/raw/refs/heads/main/textpush.js, timeout=10, tag=每日一句, enable={swch}, argument=[{type}]
+cron {time} script-path=https://github.com/zjinkee/js/raw/refs/heads/main/luma.js, timeout=10, tag=每日一句, enable={swch}, argument=[{type}]
