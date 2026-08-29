@@ -7,7 +7,7 @@ blockUpload=switch, true, tag=关闭上传区
 blockShorts=switch, true, tag=关闭短视频
 
 [Rewrite]
-response if ${url} ~= /^https:\/\/[^\/]+\.googlevideo\.com\/initplayback\?.*&ack=/i then response.body.mock("text", "{}", 200)
+^https:\/\/[^\/]+\.googlevideo\.com\/initplayback\?.*&ack= mock-response-body data-type=text data="{}" status-code=200
 
 [Script]
 http-response ^https:\/\/[^\/]+\.googleapis\.com\/(youtubei\/v1\/(browse|next|player|search|reel\/reel_watch_sequence|guide|account\/get_setting|get_watch|config))(\?(.*))?$ script-path=https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/youtube.response.js, requires-body=true, binary-body-mode=true, argument=[{blockUpload},{blockShorts}], tag=广告处理
