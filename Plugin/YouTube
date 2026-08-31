@@ -1,6 +1,6 @@
 #!name = YouTube
 #!desc = 屏蔽推荐流广告 视频播放广告 自定义关闭上传和短视频
-#!icon = https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/YouTube_play_button_square_%282013-2017%29.svg/500px-YouTube_play_button_square_%282013-2017%29.svg.png
+#!icon = https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/36/99/dd/3699dde2-2561-d256-afcc-23a67f0cebe3/logo_youtube_2024_q4_color-0-0-1x_U007emarketing-0-0-0-7-0-0-0-85-220.png/512x512bb.png
 
 [Argument]
 blockUpload=switch, true, tag=关闭上传区
