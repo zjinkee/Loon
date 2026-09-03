@@ -1,5 +1,5 @@
 #!name = 订阅解析器
-#!desc = 支持对订阅节点进行解析与管理 编辑节点使用正则表达式\n\n• 保留节点：仅保留匹配到的节点其余全部删除\n• 排除节点：匹配到的节点将被删除\n• 删除名称：删除节点名称中匹配到的内容\n• 重新命名：格式为 旧名:新名 多个重命使用,分隔\n• 节点排序：格式为 香港>台湾 会按写入的顺序排 \n\n可启用伪装UA请求订阅时模拟Shadowrocket客户端请求访问
+#!desc = 支持对订阅节点进行解析与管理 编辑使用正则表达式\n\n• 保留节点：仅保留匹配到的节点其余全部删除\n• 排除节点：匹配到的节点将被删除\n• 删除名称：删除节点名称中匹配到的内容\n• 重新命名：格式为 旧名:新名 多个重命使用,分隔\n• 节点排序：格式为 香港>台湾 会按写入的顺序排 \n\n可启用伪装UA请求订阅时模拟Shadowrocket客户端请求访问
 #!icon = https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5HrGCnE-s63rkWOO7wUQW6qxB24rghVkUr4ootRIajvINlt2T
 #!type = parser
 #!loon_version = 3.5.0
