@@ -1,6 +1,6 @@
 #!name = YouTube
 #!desc = 屏蔽推荐流广告 视频播放广告 自定义关闭上传和短视频
-#!icon = https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwQesfH0QRKCYsH1fcKEJTc0Y4t60QL8dq7TGP2-G-ViQIjn4fjGMueW0&s=10
+#!icon = https://zwiftinsider.com/wp-content/uploads/2026/05/YouTube_play_button_square_2013-2017.svg.png
 
 [Argument]
 blockUpload=switch, true, tag=关闭上传区
