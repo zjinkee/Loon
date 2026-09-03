@@ -1,6 +1,6 @@
 #!name = 哔哩哔哩
 #!desc = 屏蔽推荐流广告 播放页广告 精简推荐内容Tab底栏
-#!icon = https://i.pinimg.com/736x/f8/a4/de/f8a4de822bdd6ff9924d01d2ec9e8ff7.jpg
+#!icon = https://tr.rbxcdn.com/180DAY-f61bcf26df08085480f11b59276bc2d6/420/420/Image/Webp/noFilter
 
 [Rewrite]
 ^https:\/\/app\.bilibili\.com\/x\/v2\/account\/myinfo response-body-json-jq '.data.vip|=if . !=null and .status ==0 then . + {status:1,type:2,due_date:9005270400000,role:15} else . end'
