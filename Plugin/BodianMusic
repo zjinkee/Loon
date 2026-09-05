@@ -8,7 +8,7 @@
 [Script]
 http-response ^https:\/\/us\.l\.qq\.com\/exapp script-path=https://github.com/zjinkee/Loon/raw/refs/heads/main/js/bodian.js, requires-body=true, timeout=10, tag=开屏广告
 http-response ^https:\/\/bd-api\.kuwo\.cn\/api\/(service\/(home\/index|global\/config\/scene)|search\/topic\/word\/list) script-path=https://github.com/zjinkee/Loon/raw/refs/heads/main/js/bodian.js, requires-body=true, timeout=10, tag=界面
-http-response ^https:\/\/bd-api\.kuwo\.cn\/api\/service\/music\/info script-path=https://github.com/zjinkee/Loon/raw/refs/heads/main/js/bodian.js, requires-body=true, timeout=10, tag=音源信息
+http-response ^https:\/\/bd-api\.kuwo\.cn\/api\/service\/music\/info script-path=https://github.com/zjinkee/Loon/raw/refs/heads/main/js/bodian.js, requires-body=true, timeout=10, tag=歌曲信息
 http-response ^https:\/\/bd-api\.kuwo\.cn\/api\/play\/music\/v2\/(checkRight|audioUrl) script-path=https://github.com/zjinkee/Loon/raw/refs/heads/main/js/bodian.js, requires-body=true, timeout=10, tag=请求播放
 http-response ^https:\/\/bd-api\.kuwo\.cn\/api\/ucenter\/users\/(pub|login) script-path=https://github.com/zjinkee/Loon/raw/refs/heads/main/js/bodian.js, requires-body=true, timeout=10, tag=会员信息
 
