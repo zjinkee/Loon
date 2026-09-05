@@ -7,11 +7,11 @@
 ^https:\/\/api\.bilibili\.com\/x\/vip\/ads\/materials response-body-json-jq '{code,message,ttl,data:{}}'
 
 [Script]
-http-response ^https:\/\/app\.bilibili\.com\/x\/v2\/splash\/(list|show|event\/list2) script-path=https://github.com/zjinkee/js/raw/refs/heads/main/bilibili.js, requires-body=true, timeout=10, tag=开屏广告
-http-response ^https:\/\/app\.bilibili\.com\/x\/v2\/search script-path=https://github.com/zjinkee/js/raw/refs/heads/main/bilibili.js, requires-body=true, timeout=10, tag=搜索
-http-response ^https:\/\/app\.bilibili\.com\/x\/v2\/feed\/(index\/story|index\?) script-path=https://github.com/zjinkee/js/raw/refs/heads/main/bilibili.js, requires-body=true, timeout=10, tag=推荐视频
-http-response ^https:\/\/app\.bilibili\.com\/x\/resource\/show\/tab\/v2 script-path=https://github.com/zjinkee/js/raw/refs/heads/main/bilibili.js, requires-body=true, timeout=10, tag=主页Tab
-http-response ^https:\/\/app\.bilibili\.com\/x\/v2\/account\/(mine\?|mine\/ipad) script-path=https://github.com/zjinkee/js/raw/refs/heads/main/bilibili.js, requires-body=true, timeout=10, tag=我的页面
+http-response ^https:\/\/app\.bilibili\.com\/x\/v2\/splash\/(list|show|event\/list2) script-path=https://github.com/zjinkee/Loon/raw/refs/heads/main/js/bilibili.js, requires-body=true, timeout=10, tag=开屏广告
+http-response ^https:\/\/app\.bilibili\.com\/x\/v2\/search script-path=https://github.com/zjinkee/Loon/raw/refs/heads/main/js/bilibili.js, requires-body=true, timeout=10, tag=搜索
+http-response ^https:\/\/app\.bilibili\.com\/x\/v2\/feed\/(index\/story|index\?) script-path=https://github.com/zjinkee/Loon/raw/refs/heads/main/js/bilibili.js, requires-body=true, timeout=10, tag=推荐视频
+http-response ^https:\/\/app\.bilibili\.com\/x\/resource\/show\/tab\/v2 script-path=https://github.com/zjinkee/Loon/raw/refs/heads/main/js/bilibili.js, requires-body=true, timeout=10, tag=主页Tab
+http-response ^https:\/\/app\.bilibili\.com\/x\/v2\/account\/(mine\?|mine\/ipad) script-path=https://github.com/zjinkee/Loon/raw/refs/heads/main/js/bilibili.js, requires-body=true, timeout=10, tag=我的页面
 
 http-response ^https:\/\/(grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.(app\.(show\.v1\.Popular\/Index|dynamic\.v2\.Dynamic\/DynAll|view(unite)?\.v1\.View\/(View|ViewProgress|RelatesFeed|AIRelateAsync)|playurl\.v1\.PlayURL\/PlayView|playerunite\.v1\.Player\/PlayViewUnite)|polymer\.app\.search\.v1\.Search\/SearchAll|community\.service\.dm\.v1\.DM\/DmView|main\.community\.reply\.v1\.Reply\/MainList|pgc\.gateway\.player\.v2\.PlayURL\/PlayView)$ script-path=https://raw.githubusercontent.com/kokoryh/Sparkle/refs/heads/master/dist/bilibili.protobuf.response.js, requires-body=true, binary-body-mode=true, tag=视频广告
 
