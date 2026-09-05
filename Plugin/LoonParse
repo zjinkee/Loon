@@ -14,4 +14,4 @@ emoji = switch,false,tag=删除国旗
 ua = switch,false,tag=启用伪装UA
 
 [Script]
-generic script-path=https://github.com/zjinkee/js/raw/refs/heads/main/parse.js, tag=解析器, timeout=10, argument=[{keep},{drop},{wipe},{name},{sort},{emoji},{ua}]
+generic script-path=https://github.com/zjinkee/Loon/raw/refs/heads/main/js/parse.js, tag=解析器, timeout=10, argument=[{keep},{drop},{wipe},{name},{sort},{emoji},{ua}]
