@@ -8,44 +8,45 @@ if (/^https:\/\/app\.bilibili\.com\/x\/v2\/splash\/(list|show|event\/list2)/i.te
         obj.data.pull_interval = 999999;
         obj.data.event_list = [];
         obj.data.show = [{"ad_cb":""}];
-        obj.data.list = [{"is_ad":false,"duration":0,"ad_cb":"", "jump_image_url":"", "schema_image_url":""}];
+        obj.data.list = [{"is_ad":false,"duration":0,"ad_cb":"","jump_image_url":"","schema_image_url":""}];
         obj.data.keep_ids = [];
         obj.data.max_time = 0;
     }
     body = JSON.stringify(obj);
     $done({ body });
-}
 
-if (/^https:\/\/app\.bilibili\.com\/x\/v2\/search/i.test(url)) {
+} else if (/^https:\/\/app\.bilibili\.com\/x\/v2\/search/i.test(url)) {
     var obj = JSON.parse(body);
     if (obj.data) {
-        obj.data = obj.data.filter(v => v.type != "recommend").map(v => {delete v.search_ranking_meta;
-        return v;
+        obj.data = obj.data.filter(v => v.type != "recommend").map(v => {
+            delete v.search_ranking_meta;
+            return v;
         });
     }
     body = JSON.stringify(obj);
     $done({ body });
-}
 
-if (/^https:\/\/app\.bilibili\.com\/x\/v2\/feed\/index\/story/i.test(url)) {
+} else if (/^https:\/\/app\.bilibili\.com\/x\/v2\/feed\/index\/story/i.test(url)) {
     var obj = JSON.parse(body);
     if (obj.data) {
-        obj.data.items = (obj.data.items || []).filter(v => !(v.is_ad == true || v.ad_info || v.goto == "ad_av" || v.goto == "vertical_ad"));
+        obj.data.items = (obj.data.items || []).filter(v =>
+            !(v.is_ad == true || v.ad_info || v.goto == "ad_av" || v.goto == "vertical_ad")
+        );
     }
     body = JSON.stringify(obj);
     $done({ body });
-}
 
-if (/^https:\/\/app\.bilibili\.com\/x\/v2\/feed\/index\?/i.test(url)) {
+} else if (/^https:\/\/app\.bilibili\.com\/x\/v2\/feed\/index\?/i.test(url)) {
     var obj = JSON.parse(body);
     if (obj.data) {
-        obj.data.items = (obj.data.items || []).filter(v => !((v.ad_info && v.ad_info.is_ad_loc == true) || (v.card_type && v.card_type.indexOf("banner_") == 0)));
+        obj.data.items = (obj.data.items || []).filter(v =>
+            !((v.ad_info && v.ad_info.is_ad_loc == true) || (v.card_type && v.card_type.indexOf("banner_") == 0))
+        );
     }
     body = JSON.stringify(obj);
     $done({ body });
-}
 
-if (/^https:\/\/app\.bilibili\.com\/x\/resource\/show\/tab\/v2/i.test(url)) {
+} else if (/^https:\/\/app\.bilibili\.com\/x\/resource\/show\/tab\/v2/i.test(url)) {
     var obj = JSON.parse(body);
     if (obj.data) {
         var tab = obj.data.tab || [];
@@ -63,9 +64,8 @@ if (/^https:\/\/app\.bilibili\.com\/x\/resource\/show\/tab\/v2/i.test(url)) {
     }
     body = JSON.stringify(obj);
     $done({ body });
-}
 
-if (/^https:\/\/app\.bilibili\.com\/x\/v2\/account\/mine\?/i.test(url)) {
+} else if (/^https:\/\/app\.bilibili\.com\/x\/v2\/account\/mine\?/i.test(url)) {
     var obj = JSON.parse(body);
     if (obj.data) {
         obj.data.modular_vip_section = null;
@@ -85,9 +85,8 @@ if (/^https:\/\/app\.bilibili\.com\/x\/v2\/account\/mine\?/i.test(url)) {
     }
     body = JSON.stringify(obj);
     $done({ body });
-}
 
-if (/^https:\/\/app\.bilibili\.com\/x\/v2\/account\/mine\/ipad/i.test(url)) {
+} else if (/^https:\/\/app\.bilibili\.com\/x\/v2\/account\/mine\/ipad/i.test(url)) {
     var obj = JSON.parse(body);
     if (obj.data) {
         obj.data.ipad_upper_sections = [];
@@ -102,6 +101,7 @@ if (/^https:\/\/app\.bilibili\.com\/x\/v2\/account\/mine\/ipad/i.test(url)) {
     }
     body = JSON.stringify(obj);
     $done({ body });
-}
 
-$done({ body });
+} else {
+    $done({ body });
+}
