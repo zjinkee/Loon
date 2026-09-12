@@ -14,9 +14,6 @@ DOMAIN,app.biliapi.net,REJECT
 ^https:\/\/grpc\.biliapi\.net\/bilibili\.app\.interface\.v1\.Search\/DefaultWords$ mock-response-body data-type=text data="AAAAACEaHeaQnOe0ouinhumikeOAgeeVquWJp+aIlnVw5Li7KAE=" mock-data-is-base64=true
 ^https:\/\/grpc\.biliapi\.net\/bilibili\.app\.(view\.v1\.View\/TFInfo|viewunite\.v1\.View\/(PlayPause|ViewEndPage))$ mock-response-body data-type=text data="AAAAAAA=" mock-data-is-base64=true
 
-^https:\/\/api\.live\.bilibili\.com\/xlive\/open-interface\/v2\/tracker\/conf\? response-body-json-jq '.data.domains=["wss://tracker.chat.bilibili.com"]'
-^https:\/\/api\.bilibili\.com\/x\/pd-proxy\/tracker\? response-body-json-jq '.data[][]?="stun.chat.bilibili.com:3478"'
-
 ^https:\/\/app\.bilibili\.com\/x\/v2\/account\/myinfo response-body-json-jq '.data.vip|=if . !=null and .status ==0 then . + {status:1,type:2,due_date:9005270400000,role:15} else . end'
 ^https:\/\/api\.bilibili\.com\/x\/vip\/ads\/materials response-body-json-jq '{code,message,ttl,data:{}}'
 
