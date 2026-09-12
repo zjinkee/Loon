@@ -3,10 +3,7 @@
 #!icon = https://tr.rbxcdn.com/180DAY-f61bcf26df08085480f11b59276bc2d6/420/420/Image/Webp/noFilter
 
 [Rule]
-DOMAIN,api.biliapi.com,REJECT
-DOMAIN,app.biliapi.com,REJECT
-DOMAIN,api.biliapi.net,REJECT
-DOMAIN,app.biliapi.net,REJECT
+OR,((DOMAIN,app.biliapi.net),(DOMAIN,api.biliapi.net),(DOMAIN,app.biliapi.com),(DOMAIN,api.biliapi.com)),REJECT
 
 [Rewrite]
 ^https:\/\/grpc\.biliapi\.net\/bilibili\.app\.(interface\.v1\.(Teenagers\/ModeStatus|Search\/DefaultWords)|view\.v1\.View\/TFInfo|viewunite\.v1\.View\/(PlayPause|ViewEndPage))$ response-header-add grpc-status 0
