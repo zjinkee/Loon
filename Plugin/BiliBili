@@ -2,7 +2,21 @@
 #!desc = 屏蔽推荐流广告 播放页广告 精简推荐内容Tab底栏
 #!icon = https://tr.rbxcdn.com/180DAY-f61bcf26df08085480f11b59276bc2d6/420/420/Image/Webp/noFilter
 
+[Rule]
+DOMAIN,api.biliapi.com,REJECT
+DOMAIN,app.biliapi.com,REJECT
+DOMAIN,api.biliapi.net,REJECT
+DOMAIN,app.biliapi.net,REJECT
+
 [Rewrite]
+^https:\/\/grpc\.biliapi\.net\/bilibili\.app\.(interface\.v1\.(Teenagers\/ModeStatus|Search\/DefaultWords)|view\.v1\.View\/TFInfo|viewunite\.v1\.View\/(PlayPause|ViewEndPage))$ response-header-add grpc-status 0
+^https:\/\/grpc\.biliapi\.net\/bilibili\.app\.interface\.v1\.Teenagers\/ModeStatus$ mock-response-body data-type=text data="AAAAABMKEQgCEgl0ZWVuYWdlcnMgAioA" mock-data-is-base64=true
+^https:\/\/grpc\.biliapi\.net\/bilibili\.app\.interface\.v1\.Search\/DefaultWords$ mock-response-body data-type=text data="AAAAACEaHeaQnOe0ouinhumikeOAgeeVquWJp+aIlnVw5Li7KAE=" mock-data-is-base64=true
+^https:\/\/grpc\.biliapi\.net\/bilibili\.app\.(view\.v1\.View\/TFInfo|viewunite\.v1\.View\/(PlayPause|ViewEndPage))$ mock-response-body data-type=text data="AAAAAAA=" mock-data-is-base64=true
+
+^https:\/\/api\.live\.bilibili\.com\/xlive\/open-interface\/v2\/tracker\/conf\? response-body-json-jq '.data.domains=["wss://tracker.chat.bilibili.com"]'
+^https:\/\/api\.bilibili\.com\/x\/pd-proxy\/tracker\? response-body-json-jq '.data[][]?="stun.chat.bilibili.com:3478"'
+
 ^https:\/\/app\.bilibili\.com\/x\/v2\/account\/myinfo response-body-json-jq '.data.vip|=if . !=null and .status ==0 then . + {status:1,type:2,due_date:9005270400000,role:15} else . end'
 ^https:\/\/api\.bilibili\.com\/x\/vip\/ads\/materials response-body-json-jq '{code,message,ttl,data:{}}'
 
