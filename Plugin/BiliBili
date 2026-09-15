@@ -2,14 +2,10 @@
 #!desc = 屏蔽推荐流广告 播放页广告 精简推荐内容Tab底栏
 #!icon = https://tr.rbxcdn.com/180DAY-f61bcf26df08085480f11b59276bc2d6/420/420/Image/Webp/noFilter
 
-[Rule]
-OR,((DOMAIN,app.biliapi.net),(DOMAIN,api.biliapi.net),(DOMAIN,app.biliapi.com),(DOMAIN,api.biliapi.com)),REJECT
-
 [Rewrite]
 ^https:\/\/grpc\.biliapi\.net\/bilibili\.app\.interface\.v1\.Teenagers\/ModeStatus$ mock-response-body data-type=text data="AAAAABMKEQgCEgl0ZWVuYWdlcnMgAioA" mock-data-is-base64=true
 ^https:\/\/grpc\.biliapi\.net\/bilibili\.app\.interface\.v1\.Search\/DefaultWords$ mock-response-body data-type=text data="AAAAACEaHeaQnOe0ouinhumikeOAgeeVquWJp+aIlnVw5Li7KAE=" mock-data-is-base64=true
 ^https:\/\/grpc\.biliapi\.net\/bilibili\.app\.(view\.v1\.View\/TFInfo|viewunite\.v1\.View\/(PlayPause|ViewEndPage))$ mock-response-body data-type=text data="AAAAAAA=" mock-data-is-base64=true
-
 ^https:\/\/app\.bilibili\.com\/x\/v2\/account\/myinfo response-body-json-jq '.data.vip|=if . !=null and .status ==0 then . + {status:1,type:2,due_date:9005270400000,role:15} else . end'
 ^https:\/\/api\.bilibili\.com\/x\/vip\/ads\/materials response-body-json-jq '{code,message,ttl,data:{}}'
 
