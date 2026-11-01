@@ -1,6 +1,6 @@
 #!name=YouTube
 #!desc=屏蔽游览推荐广告 视频播放页广告 个性自定义参数操作
-#!icon=https://kcemployees.com/wp-content/uploads/2019/02/youtube-logo-red.png
+#!icon=https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdM1SqtSB5S5MhDCTmeMJ2u33rOhBQOQXQTuI4Xi1FDA&s=10
 
 [Argument]
 autoHd=switch, false, true, tag=最高画质播放
@@ -16,14 +16,13 @@ request if ${url} ~= /^https:\/\/s\.youtube\.com\/api\/stats\/ads/i then reject(
 request if ${url} ~= /^https:\/\/www\.youtube\.com\/(pagead|pcs)\//i then reject(404)
 
 [Script]
-request if ${url} ~= /^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/player\/ad_break(?:\?.*)?$/i then script("https://rucu6.pages.dev/Scripts/youtube/request_gholts.js") with tag="请求-广告插播处理", requires_body=true, binary_body_mode=true
-request if ${url} ~= /^https?:\/\/[\w-]+\.googlevideo\.com\/initplayback(?:\?.*)?$/i then script("https://rucu6.pages.dev/Scripts/youtube/request_gholts.js") with tag="请求-初始播放处理", requires_body=true, binary_body_mode=true
-request if ${url} ~= /^https?:\/\/[\w-]+\.googlevideo\.com\/videoplayback(?:\?.*)?$/i then script("https://rucu6.pages.dev/Scripts/youtube/request_gholts.js", {${autoHd}}) with tag="请求-视频播放画质", requires_body=true, binary_body_mode=true
-request if ${url} ~= /^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/log_event(?:\?.*)?$/i then script("https://rucu6.pages.dev/Scripts/youtube/request_gholts.js") with tag="请求-播放事件日志", requires_body=true, binary_body_mode=true
+request if ${url} ~= /^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/player\/ad_break(?:\?.*)?$/i then script("https://rucu6.pages.dev/Scripts/youtube/request_gholts.js") with tag="广告插播处理", requires_body=true, binary_body_mode=true
+request if ${url} ~= /^https?:\/\/[\w-]+\.googlevideo\.com\/initplayback(?:\?.*)?$/i then script("https://rucu6.pages.dev/Scripts/youtube/request_gholts.js") with tag="初始播放处理", requires_body=true, binary_body_mode=true
+request if ${url} ~= /^https?:\/\/[\w-]+\.googlevideo\.com\/videoplayback(?:\?.*)?$/i then script("https://rucu6.pages.dev/Scripts/youtube/request_gholts.js", {${autoHd}}) with tag="视频播放画质", requires_body=true, binary_body_mode=true
 
-response if ${url} ~= /^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/(?:navigation\/resolve_url|browse|next|player|search|reel\/reel_watch_sequence|guide|account\/get_setting|get_watch)(?:\?.*)?$/i then script("https://rucu6.pages.dev/Scripts/youtube/response_gholts.js", {${autoHd}, ${blockGames}, ${blockShorts}, ${blockStore}, ${blockUpload}, ${blockVerticalLive}, ${jumpAhead}}) with tag="响应-广告过滤与界面", requires_body=true, binary_body_mode=true
-response if ${url} ~= /^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/(?:config|log_event)(?:\?.*)?$/i then script("https://rucu6.pages.dev/Scripts/youtube/key_gholts.js") with tag="响应-配置与密钥处理", requires_body=true, binary_body_mode=true
-response if ${url} ~= /^https?:\/\/[\w-]+\.googlevideo\.com\/initplayback(?:\?.*)?$/i then script("https://rucu6.pages.dev/Scripts/youtube/ump_gholts.js", {${autoHd}, ${blockGames}, ${blockStore}, ${blockVerticalLive}, ${jumpAhead}}) with tag="响应-播放数据与功能", requires_body=true, binary_body_mode=true
+response if ${url} ~= /^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/(?:navigation\/resolve_url|browse|next|player|search|reel\/reel_watch_sequence|guide|account\/get_setting|get_watch)(?:\?.*)?$/i then script("https://rucu6.pages.dev/Scripts/youtube/response_gholts.js", {${autoHd}, ${blockGames}, ${blockShorts}, ${blockStore}, ${blockUpload}, ${blockVerticalLive}, ${jumpAhead}}) with tag="广告过滤与界面", requires_body=true, binary_body_mode=true
+response if ${url} ~= /^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/(?:config|log_event)(?:\?.*)?$/i then script("https://rucu6.pages.dev/Scripts/youtube/key_gholts.js") with tag="配置与密钥处理", requires_body=true, binary_body_mode=true
+response if ${url} ~= /^https?:\/\/[\w-]+\.googlevideo\.com\/initplayback(?:\?.*)?$/i then script("https://rucu6.pages.dev/Scripts/youtube/ump_gholts.js", {${autoHd}, ${blockGames}, ${blockStore}, ${blockVerticalLive}, ${jumpAhead}}) with tag="播放数据与功能", requires_body=true, binary_body_mode=true
 
 [MITM]
 hostname = s.youtube.com,www.youtube.com,rr*.googlevideo.com,youtubei.googleapis.com
