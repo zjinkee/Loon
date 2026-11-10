@@ -20,8 +20,8 @@ function rate(num,len=30){
         var done=val>0?Math.max(1,Math.min(len,Math.ceil(val/100*len))):0;
 
         obj.b=
-        `<span style="color:#E56666;text-shadow:0 0 1.5px #E56666;">${"■".repeat(done)}</span>`+
-        `<span style="color:#52D078;text-shadow:0 0 1.5px #52D078;">${"■".repeat(len-done)}</span>`;
+        `<span style="color:#E56666;text-shadow:0 0 2px #E56666;">${"■".repeat(done)}</span>`+
+        `<span style="color:#52D078;text-shadow:0 0 2px #52D078;">${"■".repeat(len-done)}</span>`;
     }
     return obj;
 }
@@ -129,14 +129,14 @@ function get(url){
 <span style="font-size:10px;font-weight:500;">${txtd}</span><br>
 <span style="font-size:9px;">${rskd.b}</span><br><br>
 
-<span style="font-size:10px;font-weight:400;">查询数值相差较大的话仅供参考！</span><br><br><br>
+<span style="font-size:10px;font-weight:500;color:#5D56FF;">查询来自多个源数据相差较大自己参考!!!</span><br><br><br>
 
 <span style="font-size:14px;font-weight:400;">耗时：${Time}</span><br>
 <span style="font-size:14px;font-weight:400;">属于：${type} • ${bcst}</span><br>
 <span style="font-size:14px;font-weight:400;">位置：${loca}</span><br>
 
 <span style="color:#CCC;">─────────────────────</span><br>
-<span style="font-size:14px;font-weight:500;color:#8659E8;">节点：${node}</span>
+<span style="font-size:14px;font-weight:400;">节点：${node}</span>
 </p>`;
 
     $done({
