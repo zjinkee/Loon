@@ -11,11 +11,11 @@ function rate(num,len=30){
     if(num!==""&&!isNaN(+num)){
         obj.x=val+"%";
 
-        if(val>=70)obj.k="高危风险IP";
-        else if(val>=50)obj.k="高风险IP";
-        else if(val>=20)obj.k="中风险IP";
-        else if(val>0)obj.k="低风险IP";
-        else obj.k="无风险IP";
+        if(val>=70)obj.k="高危风险";
+        else if(val>=50)obj.k="高风险";
+        else if(val>=20)obj.k="中风险";
+        else if(val>0)obj.k="低风险";
+        else obj.k="无风险";
 
         var done=val>0?Math.max(1,Math.min(len,Math.ceil(val/100*len))):0;
 
@@ -55,6 +55,8 @@ function get(url){
 
 
 (async function(){    
+    var startTime=Date.now();
+
     var main=await get("https://my.ippure.com/v1/info");
     if (main.error){
         $done({
@@ -74,33 +76,21 @@ function get(url){
 
 
     var [
-        ipdata,
         ip2location,
         scamalytics
     ]=await Promise.all([
-        get(`https://ipdata.co/${data.ip}`),
         get(`https://www.ip2location.io/${data.ip}`),
         get(`https://scamalytics.com/ip/${data.ip}`)
     ]);
 
+    var Time=((Date.now()-startTime)/1000).toFixed(2)+" 秒";
 
-    var rskb=rate("");
+
     var rskc=rate("");
     var rskd=rate("");
 
-    var txtb;
     var txtc;
     var txtd;
-
-
-    if(ipdata.error){
-        txtb=ipdata.error;
-    }else{
-        var matc=ipdata.body.match(/sidebar-trust-score-value[\s\S]*?>\s*(\d+)/);
-        var scor=matc?(100-Number(matc[1])):"";
-        rskb=rate(scor);
-        txtb=rskb.k+" "+rskb.x;
-    }
 
 
     if(ip2location.error){
@@ -131,26 +121,22 @@ function get(url){
 <span style="color:#CCC;">─────────────────────</span><br>
 
 <span style="font-size:10px;font-weight:500;">${txta}</span><br>
-<span style="font-size:9px;">${rska.b}</span><br>
-<span style="font-size:9px;font-weight:400;">IPPure</span><br><br>
-
-<span style="font-size:10px;font-weight:500;">${txtb}</span><br>
-<span style="font-size:9px;">${rskb.b}</span><br>
-<span style="font-size:9px;font-weight:400;">IPdata</span><br><br>
+<span style="font-size:9px;">${rska.b}</span><br><br>
 
 <span style="font-size:10px;font-weight:500;">${txtc}</span><br>
-<span style="font-size:9px;">${rskc.b}</span><br>
-<span style="font-size:9px;font-weight:400;">IP2Location</span><br><br>
+<span style="font-size:9px;">${rskc.b}</span><br><br>
 
 <span style="font-size:10px;font-weight:500;">${txtd}</span><br>
-<span style="font-size:9px;">${rskd.b}</span><br>
-<span style="font-size:9px;font-weight:400;">Scamalytics</span><br><br>
+<span style="font-size:9px;">${rskd.b}</span><br><br>
 
-<span style="font-size:13px;font-weight:400;">属于：${type} • ${bcst}</span><br>
-<span style="font-size:13px;font-weight:400;">位置：${loca}</span><br>
+<span style="font-size:10px;font-weight:400;">查询数值相差较大的话仅供参考！</span><br><br><br>
+
+<span style="font-size:14px;font-weight:400;">耗时：${Time}</span><br>
+<span style="font-size:14px;font-weight:400;">属于：${type} • ${bcst}</span><br>
+<span style="font-size:14px;font-weight:400;">位置：${loca}</span><br>
 
 <span style="color:#CCC;">─────────────────────</span><br>
-<span style="font-size:13px;font-weight:600;color:#8659E8;">节点：${node}</span>
+<span style="font-size:14px;font-weight:500;color:#8659E8;">节点：${node}</span>
 </p>`;
 
     $done({
