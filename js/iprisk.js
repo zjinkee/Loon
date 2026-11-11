@@ -19,8 +19,11 @@ function rate(num,len=30){
 
         var done=val>0?Math.max(1,Math.min(len,Math.ceil(val/100*len))):0;
 
+        var color=val<=30?"#FFD34E":"#E54A4A";
+        var glow=val<=30?"#FFD34E":"#E56666";
+
         obj.b=
-        `<span style="color:#E54A4A;text-shadow:0 0 2px #E56666;">${"■".repeat(done)}</span>`+
+        `<span style="color:${color};text-shadow:0 0 2px ${glow};">${"■".repeat(done)}</span>`+
         `<span style="color:#52D078;text-shadow:0 0 2px #52D078;">${"■".repeat(len-done)}</span>`;
     }
     return obj;
