@@ -129,7 +129,7 @@ function get(url){
 <span style="font-size:10px;font-weight:500;">${txtd}</span><br>
 <span style="font-size:9px;">${rskd.b}</span><br><br>
 
-<span style="font-size:10px;font-weight:500;color:#5D56FF;">查询来自多个源数据相差较大自己参考!!!</span><br><br><br>
+<span style="font-size:10px;font-weight:500;color:#6B75FF;">查询来自多个数据源结果会相差较大!</span><br><br><br>
 
 <span style="font-size:14px;font-weight:400;">耗时：${Time}</span><br>
 <span style="font-size:14px;font-weight:400;">属于：${type} • ${bcst}</span><br>
