@@ -1,5 +1,5 @@
 #!name = 酷狗音乐
-#!desc = 屏蔽弹窗广告 贴片横幅广告
+#!desc = 屏蔽弹窗横幅贴片广告 不影响活动免费听歌功能
 #!icon = https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/27/12/2d/27122da7-b264-5299-1b17-89020edef21d/AppIconGlass-0-0-1x_U007epad-0-1-0-85-220.png/512x512bb.png
 
 [Rewrite]
