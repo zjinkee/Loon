@@ -1,0 +1,14 @@
+#!name = 酷狗音乐
+#!desc = 屏蔽弹窗广告 贴片横幅广告
+#!icon = https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/27/12/2d/27122da7-b264-5299-1b17-89020edef21d/AppIconGlass-0-0-1x_U007epad-0-1-0-85-220.png/512x512bb.png
+
+[Rewrite]
+request if ${url} ~= /^https:\/\/(gateway\.kugou\.com\/(yutc\/youth\/v1\/task\/info|ads\.gateway\/v2\/lite_v_search_no_focus|youth\/api\/user\/v1\/init|goddess\/v1\/content\/biz_list|youth\/v2\/activity\/task_list|concepts\/v1\/free_mode\/info)|adservice\.kugou\.com\/v2\/lite_v_youth_task_center)/i then reject(200)
+request if ${url} ~= /^https:\/\/gateway\.kugou\.com\/ads\.service\/v2\/lite_v_splash/i then request.json.jq(".own_ads={}|.display_count=0|.tags={}")
+response if ${url} ~= /^https:\/\/gateway\.kugou\.com\/youth\/v1\/account\/get_vip_tips/i then response.json.jq(".data.account_tips.vip_icon=\"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png\"|.data.account_tips.title=\"已拦截广告\"|.data.account_tips.url=\"https:\\/\\/activity.kugou.com\\/lists\\/v-ec9b6550\\/shareAndCode2.html\"")
+response if ${url} ~= /^https:\/\/gateway\.kugou\.com\/youth\/v1\/ab\/tmeab\?ab_source=TMEAB0tgviptype0type/i then response.json.jq(".data.TMEAB0tgviptype0type.mapParams|=(.Insert_ads_drag=\"0\"|.Insert_ads_mode=\"0\"|.Insert_ads_point=\"0\"|.Insert_ads_timing=\"0\"|.mft_pop_max=\"0\"|.singlesong_pop_ups_max=\"0\"|.songs_pop_ups_max=\"0\")")
+response if ${url} ~= /^https:\/\/gateway\.kugou\.com\/youth\/v1\/ab\/tmeab\?ab_source=changtingdaily/i then response.json.jq(".data.TMEAB0ad0type.mapParams|=(.click=\"0\"|.notice=\"0\"|.act=\"0\"|.syban_show=\"0\"|.syban=\"0_0_0_0_0\"|.post=\"0_0_0_0_0\"|.comment=\"0_0_0_0_0\"|.fullplay_request=\"0\"|.diy_play=\"0\"|.round_play=\"0\")|.data.TMEAB0FreemiumExposureFix0type.mapParams.popup_display=\"0\"|.data.TMEAB0FreemiumExposureFix0typeV2.mapParams.popup_display=\"0\"|.data.TMEAB0WZMineFreeBar.mapParams|=(.EnableNewLogic=\"0\"|.Nonefreebar=\"1\"|.AfterTVIP=\"0\"|.AfterSVIP=\"0\")")
+response if ${url} ~= /^https:\/\/gateway\.kugou\.com\/youth\/v1\/ab\/tmeab\?ab_source=TMEAB0vipplay0type/i then response.json.jq(".data.TMEAB0GNBad0splashexpcontrol.mapParams.front_5s=\"0\"|.data.TMEAB0EarningTab0type.mapParams.Earning_Tab=\"0\"|.data.TMEAB0FreemiumModelTouchpoint0type.mapParams|=(.player_top_ad_con=\"0\"|.radio_down_ad_con=\"0\"|.hello_ad=\"0\"|.radio_down_ad=\"0\"|.enter=\"0\"|.hello_ad_con=\"0\"|.progress_bar_ad_con=\"0\"|.progress_bar_ad_autoshut=\"0\"|.today_act_min=\"0\"|.player_top_ad=\"0\"|.radio_down_noremind=\"0\"|.progress_bar_ad=\"0\")|.data.TMEAB0fmBidding.mapParams|=(.rewardAdLocalCache=\"0\"|.rewardReqNewBeforeShow=\"0\"|.allowRepeatRequest=\"0\"|.rewardReqInterval=\"3600\"|.rewardRealTimeReqInterval=\"3600\"|.rewardLocalCacheSize=\"0\"|.cacheCount=\"0\")|.data.TMEAB0TaskCenterEnter0type.mapParams.ad=\"0\"")
+
+[MitM]
+hostname = gateway.kugou.com
