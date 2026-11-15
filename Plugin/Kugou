@@ -3,6 +3,7 @@
 #!icon = https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/27/12/2d/27122da7-b264-5299-1b17-89020edef21d/AppIconGlass-0-0-1x_U007epad-0-1-0-85-220.png/512x512bb.png
 
 [Rewrite]
+request if ${url} ~= /^https:\/\/gateway\.kugou\.com\/ads\.gateway\/v2\/lite_v_vip_center/i then reject_dict(200)
 request if ${url} ~= /^https:\/\/gateway\.kugou\.com\/yutc\/youth\/v1\/task\/info/i then reject_dict(200)
 request if ${url} ~= /^https:\/\/gateway\.kugou\.com\/ads\.gateway\/v2\/lite_v_search_no_focus/i then reject_dict(200)
 request if ${url} ~= /^https:\/\/gateway\.kugou\.com\/youth\/api\/user\/v1\/init/i then reject_dict(200)
