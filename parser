@@ -15,4 +15,4 @@ ua = switch,false,tag=启用伪装UA,desc=开启会使用小火箭UA模拟请求
 note = switch,false,tag=开启通知,desc=用于控制通知提醒和日志输出
 
 [Script]
-generic script-path=https://github.com/zjinkee/Loon/raw/refs/heads/main/js/parse.js, tag=解析器, timeout=10, argument=[{keep},{drop},{wipe},{name},{sort},{emoji},{ua},{note}]
+generic script-path=https://github.com/zjinkee/Loon/raw/refs/heads/main/js/parser.js, tag=解析器, timeout=10, argument=[{keep},{drop},{wipe},{name},{sort},{emoji},{ua},{note}]
