@@ -1,5 +1,5 @@
 #!name = 订阅解析器
-#!desc = 支持对订阅节点进行管理使用正则表达式编辑\n可启用伪装UA模拟小火箭客户端请求订阅
+#!desc = 解析整理节点名称 可使用替换小火箭UA拉取订阅节点
 #!icon = https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5HrGCnE-s63rkWOO7wUQW6qxB24rghVkUr4ootRIajvINlt2T
 #!type = parser
 #!loon_version = 3.5.0
@@ -7,12 +7,10 @@
 [Argument]
 keep = input,"",tag=保留节点,desc=仅保留匹配到的节点其余全部删除
 drop = input,"",tag=排除节点,desc=仅排除匹配到的节点其余全部保留
-sort = input,"",tag=节点排序,desc=格式为 香港>台湾 按前后顺序排
 wipe = input,"",tag=删除名称,desc=匹配到的节点名称字段将会被删除
-name = input,"",tag=重新命名,desc=格式为 旧名:新名 多个分组使用,连接
-emoji = switch,false,tag=删除国旗,desc=开启会删除节点名称国旗!
-ua = switch,false,tag=启用伪装UA,desc=开启会使用小火箭UA模拟请求订阅
-note = switch,false,tag=开启通知,desc=用于控制通知提醒和日志输出
+name = input,"",tag=重新命名,desc=格式 旧名:新名 多个分组使用 "+"
+ua   = switch,false,tag=获取订阅,desc=开启使用小火箭UA拉取订阅节点
+note = switch,false,tag=通知提醒,desc=控制解析器节点操作通知
 
 [Script]
-generic script-path=https://github.com/zjinkee/Loon/raw/refs/heads/main/js/parser.js, tag=解析器, timeout=10, argument=[{keep},{drop},{wipe},{name},{sort},{emoji},{ua},{note}]
+generic script-path=https://github.com/zjinkee/Loon/raw/refs/heads/main/js/parser.js, tag=解析器, timeout=15, argument=[{keep},{drop},{wipe},{name},{note},{ua}]
