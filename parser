@@ -12,6 +12,7 @@ wipe = input,"",tag=删除名称,desc=匹配到的节点名称字段将会被删
 name = input,"",tag=重新命名,desc=格式为 旧名:新名 多个分组使用,连接
 emoji = switch,false,tag=删除国旗,desc=开启会删除节点名称国旗!
 ua = switch,false,tag=启用伪装UA,desc=开启会使用小火箭UA模拟请求订阅
+note = switch,false,tag=开启通知,desc=用于控制通知提醒和日志输出
 
 [Script]
-generic script-path=https://github.com/zjinkee/Loon/raw/refs/heads/main/js/parse.js, tag=解析器, timeout=10, argument=[{keep},{drop},{wipe},{name},{sort},{emoji},{ua}]
+generic script-path=https://github.com/zjinkee/Loon/raw/refs/heads/main/js/parse.js, tag=解析器, timeout=10, argument=[{keep},{drop},{wipe},{name},{sort},{emoji},{ua},{note}]
