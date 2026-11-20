@@ -16,7 +16,7 @@ function param() {
     wipe = args.wipe != null ? String(args.wipe) : wipe;
     name = args.name != null ? String(args.name) : name;
     note = args.note === true || args.note === "true";
-    ua   = args.ua   === true || args.ua.  === "true";
+    ua   = args.ua === true || args.ua === "true";
 }
 
 function Reouest(cb) {
