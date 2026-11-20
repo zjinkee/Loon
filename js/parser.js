@@ -69,6 +69,9 @@ function node(decodedText) {
     var list = [];
     if (!decodedText) return list;
 
+    var shareRe = /^(?:vmess|vless|trojan|ss|ssr|hysteria2?|hy2|tuic|wireguard|wg|anytls):\/\//i;
+    var plainProtoRe = /^(?:shadowsocks|shadowsocksr|ss|ssr|vmess|vless|trojan|http|https|socks5|socks5h|wireguard|hysteria|hysteria2|tuic|snell|anytls)\s*,/i;
+
     function decodeNamePart(s) {
         if (!s) return "";
         try {
@@ -82,8 +85,9 @@ function node(decodedText) {
     for (var i = 0; i < lines.length; i++) {
         var line = lines[i].trim();
         if (!line) continue;
+        if (/^(?:#|\/\/|;)/.test(line)) continue;
 
-        if (line.indexOf("://") > -1) {
+        if (shareRe.test(line)) {
             var hash = line.lastIndexOf("#");
             if (hash > -1) {
                 list.push({
@@ -124,17 +128,15 @@ function node(decodedText) {
 
         var eq = line.indexOf("=");
         if (eq > 0) {
-            list.push({
-                kind: "plain",
-                rawName: line.slice(0, eq).trim(),
-                body: line.slice(eq + 1).trim()
-            });
-        } else {
-            list.push({
-                kind: "plain",
-                rawName: line,
-                body: ""
-            });
+            var left = line.slice(0, eq).trim();
+            var right = line.slice(eq + 1).trim();
+            if (left && plainProtoRe.test(right)) {
+                list.push({
+                    kind: "plain",
+                    rawName: left,
+                    body: right
+                });
+            }
         }
     }
 
@@ -193,47 +195,58 @@ function rename(entries) {
         return t.replace(/\s{2,}/g, " ").trim();
     }
 
+    var total = entries.length;
     var out = [];
-    var kept = 0;
-    var excluded = 0;
+    var matchedKeep = 0;
+    var matchedDrop = 0;
 
-    for (var j = 0; j < entries.length; j++) {
+    for (var j = 0; j < total; j++) {
         var item = entries[j];
+        var rawN = String(item.rawName || "").trim();
+
+        if (keepRe && rawN && keepRe.test(rawN)) {
+            matchedKeep++;
+        }
+        if (dropRe && rawN && dropRe.test(rawN)) {
+            matchedDrop++;
+        }
 
         if (item.kind === "plain") {
             var nextN = editTitle(item.rawName);
-            if (nextN === null || nextN === "") {
-                excluded++;
-                continue;
-            }
+            if (nextN === null || nextN === "") continue;
             out.push(item.body ? nextN + " = " + item.body : nextN);
-            kept++;
         } else if (item.kind === "share") {
             if (!item.rawName) {
-                if (keepRe) {
-                    excluded++;
-                    continue;
-                }
+                if (keepRe) continue;
                 out.push(item.line);
-                kept++;
                 continue;
             }
             var nextN = editTitle(item.rawName);
-            if (nextN === null || nextN === "") {
-                excluded++;
-                continue;
-            }
+            if (nextN === null || nextN === "") continue;
             var enc = encodeURIComponent(nextN);
             out.push(
                 item.hasHash
                     ? item.line.slice(0, item.hashIndex + 1) + enc
                     : item.line + "#" + enc
             );
-            kept++;
         }
     }
 
     if (note && (keep || drop)) {
+        var kept = 0;
+        var excluded = 0;
+
+        if (dropRe && !keepRe) {
+            excluded = matchedDrop;
+            kept = total - excluded;
+        } else if (keepRe && !dropRe) {
+            kept = matchedKeep;
+            excluded = total - kept;
+        } else {
+            kept = out.length;
+            excluded = total - kept;
+        }
+
         $notification.post(
             "资源解析器",
             "",
