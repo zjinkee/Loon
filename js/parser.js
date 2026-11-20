@@ -4,71 +4,24 @@ var keep = "";
 var drop = "";
 var wipe = "";
 var name = "";
-var sort = "";
-var emoji = false;
-var ua = false;
 var note = false;
+var ua   = false;
 
-var uaNote = "";
-var nodeNote = "";
-
-function loadArgs() {
+function param() {
     var args = $argument;
     if (!args) return;
+
     keep = args.keep != null ? String(args.keep) : keep;
     drop = args.drop != null ? String(args.drop) : drop;
     wipe = args.wipe != null ? String(args.wipe) : wipe;
     name = args.name != null ? String(args.name) : name;
-    sort = args.sort != null ? String(args.sort) : sort;
-    emoji = args.emoji === true || args.emoji === "true";
-    ua = args.ua === true || args.ua === "true";
     note = args.note === true || args.note === "true";
+    ua   = args.ua   === true || args.ua.  === "true";
 }
 
-function pad2(n) {
-    return n < 10 ? "0" + n : String(n);
-}
-
-function getNowTime() {
-    var d = new Date();
-    var y = d.getFullYear();
-    var m = pad2(d.getMonth() + 1);
-    var day = pad2(d.getDate());
-    var h = pad2(d.getHours());
-    var min = pad2(d.getMinutes());
-    var s = pad2(d.getSeconds());
-    return y + "." + m + "." + day + "  " + h + ":" + min + ":" + s;
-}
-
-function postAlert(content) {
-    if (!note || !content) return;
-    if (typeof $notification !== "undefined" && typeof $notification.post === "function") {
-        $notification.post("解析器", "", String(content));
-    }
-}
-
-function flushLog() {
-    if (!note) return;
-    if (!uaNote && !nodeNote) return;
-
-    var blocks = [getNowTime()];
-    if (uaNote) blocks.push(uaNote);
-    if (nodeNote) {
-        if (uaNote) blocks.push("");
-        blocks.push(nodeNote);
-    }
-
-    var logText = blocks.join("\n");
-    if (typeof console !== "undefined" && typeof console.log === "function") {
-        console.log(logText);
-    }
-}
-
-function pullSub(cb) {
-    var fallback = String($resource || "");
-    if (ua && mode === 1 && typeof $httpClient !== "undefined" && $resourceUrl) {
-        uaNote = "订阅请求使用小火箭UA拉取节点";
-        postAlert(uaNote);
+function Reouest(cb) {
+    var raw = String($resource || "");
+    if (ua && mode === 1 && $resourceUrl) {
         $httpClient.get(
             {
                 url: String($resourceUrl),
@@ -78,386 +31,236 @@ function pullSub(cb) {
                 }
             },
             function (_fault, _state, reply) {
-                var text = reply != null && String(reply).length > 0 ? String(reply) : fallback;
-                cb(text);
+                var res = reply != null && String(reply).length > 0 ? String(reply) : raw;
+                cb(res, true);
             }
         );
     } else {
-        cb(fallback);
+        cb(raw, false);
     }
 }
 
-function decodeUri(str) {
+function base64(content) {
+    if (!content) return "";
+    var str = String(content).replace(/^\uFEFF/, "").trim();
     if (!str) return "";
+
+    var b64 = str.replace(/\s+/g, "").replace(/-/g, "+").replace(/_/g, "/");
+    if (!/^[A-Za-z0-9+/=]+$/.test(b64) || b64.length % 4 === 1) {
+        return str;
+    }
+    while (b64.length % 4 !== 0) {
+        b64 += "=";
+    }
+
     try {
-        return decodeURIComponent(str.replace(/\+/g, "%20"));
-    } catch (_e) {
+        var bin = atob(b64);
+        var buf = new Uint8Array(bin.length);
+        for (var i = 0; i < bin.length; i++) {
+            buf[i] = bin.charCodeAt(i);
+        }
+        return new TextDecoder("utf-8", { fatal: false }).decode(buf).replace(/^\uFEFF/, "");
+    } catch (_) {
         return str;
     }
 }
 
-function decodeB64(rawText) {
-    var text = String(rawText || "");
-    if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
-    text = text.replace(/\r\n/g, "\n").replace(/\r/g, "\n").trim();
-    if (!text) return "";
+function node(decodedText) {
+    var list = [];
+    if (!decodedText) return list;
 
-    var compact = text.replace(/\s+/g, "");
-    if (compact.length >= 16 && compact.length % 4 !== 1 && /^[A-Za-z0-9+/=_-]+$/.test(compact)) {
+    function decodeNamePart(s) {
+        if (!s) return "";
         try {
-            var norm = compact.replace(/_/g, "/").replace(/-/g, "+");
-            var pad = norm.length % 4;
-            if (pad === 2) norm += "==";
-            else if (pad === 3) norm += "=";
-
-            var bin = atob(norm);
-            var bytes = new Uint8Array(bin.length);
-            for (var i = 0; i < bin.length; i++) {
-                bytes[i] = bin.charCodeAt(i);
-            }
-            if (typeof TextDecoder !== "undefined") {
-                var decoded = new TextDecoder("utf-8", { fatal: false }).decode(bytes);
-                if (decoded.charCodeAt(0) === 0xFEFF) decoded = decoded.slice(1);
-                return decoded.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
-            }
-            var out = [];
-            for (var j = 0; j < bytes.length; j++) {
-                out.push("%" + ("00" + bytes[j].toString(16)).slice(-2));
-            }
-            var fallback = decodeURIComponent(out.join(""));
-            if (fallback.charCodeAt(0) === 0xFEFF) fallback = fallback.slice(1);
-            return fallback.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
-        } catch (_e) {
-            return text;
+            return decodeURIComponent(s.replace(/\+/g, "%20")).trim();
+        } catch (_) {
+            return s.trim();
         }
     }
 
-    return text;
-}
-
-function getLinkName(line) {
-    var hash = line.lastIndexOf("#");
-    if (hash > -1) {
-        return {
-            title: decodeUri(line.slice(hash + 1)).trim(),
-            hasHash: true,
-            hashIndex: hash
-        };
-    }
-
-    var qIndex = line.indexOf("?");
-    if (qIndex > -1) {
-        var queryPart = line.slice(qIndex + 1);
-        var match = queryPart.match(/(?:^|&)(?:remark|remarks|ps)=([^&]*)/i);
-        if (match && match[1]) {
-            return {
-                title: decodeUri(match[1]).trim(),
-                hasHash: false,
-                hashIndex: -1
-            };
-        }
-    }
-
-    return {
-        title: "",
-        hasHash: false,
-        hashIndex: -1
-    };
-}
-
-function parseLines(decodedText) {
-    var entries = [];
-    if (!decodedText) return entries;
-
-    var rawLines = decodedText.split("\n");
-    for (var i = 0; i < rawLines.length; i++) {
-        var line = rawLines[i].trim();
+    var lines = decodedText.split(/\r?\n/);
+    for (var i = 0; i < lines.length; i++) {
+        var line = lines[i].trim();
         if (!line) continue;
 
-        if (line[0] === "#" && line.indexOf("://") === -1) {
-            entries.push({ kind: "other", text: line, id: i });
+        if (line.indexOf("://") > -1) {
+            var hash = line.lastIndexOf("#");
+            if (hash > -1) {
+                list.push({
+                    kind: "share",
+                    line: line,
+                    rawName: decodeNamePart(line.slice(hash + 1)),
+                    hasHash: true,
+                    hashIndex: hash
+                });
+                continue;
+            }
+
+            var qIdx = line.indexOf("?");
+            if (qIdx > -1) {
+                var qs = line.slice(qIdx + 1);
+                var m = qs.match(/(?:^|&)(?:remark|remarks|ps)=([^&]*)/i);
+                if (m && m[1]) {
+                    list.push({
+                        kind: "share",
+                        line: line,
+                        rawName: decodeNamePart(m[1]),
+                        hasHash: false,
+                        hashIndex: -1
+                    });
+                    continue;
+                }
+            }
+
+            list.push({
+                kind: "share",
+                line: line,
+                rawName: "",
+                hasHash: false,
+                hashIndex: -1
+            });
             continue;
         }
 
-        var isShareLink = line.indexOf("://") > -1;
-        var isNativeNode = !isShareLink && line.indexOf("=") > 0;
-
-        if (isNativeNode) {
-            var eqIdx = line.indexOf("=");
-            entries.push({
-                kind: "native",
-                rawName: line.slice(0, eqIdx).trim(),
-                body: line.slice(eqIdx + 1).trim(),
-                id: i
-            });
-        } else if (isShareLink) {
-            var info = getLinkName(line);
-            entries.push({
-                kind: "share",
-                line: line,
-                rawName: info.title,
-                hasHash: info.hasHash,
-                hashIndex: info.hashIndex,
-                id: i
+        var eq = line.indexOf("=");
+        if (eq > 0) {
+            list.push({
+                kind: "plain",
+                rawName: line.slice(0, eq).trim(),
+                body: line.slice(eq + 1).trim()
             });
         } else {
-            entries.push({ kind: "other", text: line, id: i });
+            list.push({
+                kind: "plain",
+                rawName: line,
+                body: ""
+            });
         }
     }
 
-    return entries;
-}
-
-function makeRegex(pattern, flags) {
-    if (!pattern) return null;
-    try {
-        return new RegExp(pattern, flags || "");
-    } catch (_e) {
-        return null;
-    }
-}
-
-function parseRenameMap(rawName) {
-    var rules = [];
-    if (!rawName) return rules;
-    var items = rawName.split(",");
-    for (var i = 0; i < items.length; i++) {
-        var idx = items[i].indexOf(":");
-        if (idx > -1) {
-            var oldStr = items[i].slice(0, idx);
-            var newStr = items[i].slice(idx + 1);
-            if (oldStr.length > 0) {
-                rules.push([oldStr, newStr]);
-            }
-        }
-    }
-    return rules;
-}
-
-function replaceText(source, target, replacement) {
-    if (!source || !target) return source;
-    var pos = 0;
-    var out = "";
-    while (true) {
-        var found = source.indexOf(target, pos);
-        if (found === -1) {
-            out += source.slice(pos);
-            break;
-        }
-        out += source.slice(pos, found) + replacement;
-        pos = found + target.length;
-    }
-    return out;
-}
-
-function parseSortKeys(rawSort) {
-    var list = [];
-    if (!rawSort) return list;
-    var parts = rawSort.split(">");
-    for (var i = 0; i < parts.length; i++) {
-        var kw = parts[i].trim();
-        if (kw) list.push(kw);
-    }
     return list;
 }
 
-function dropEmoji(str) {
-    return str
-        .replace(/\p{Extended_Pictographic}/gu, "")
-        .replace(/\uD83C[\uDDE6-\uDDFF]/g, "")
-        .replace(/[\u200D\uFE0E\uFE0F]/g, "");
-}
-
-function checkFilter(title, ctx, stats) {
-    var hasKeep = Boolean(ctx.keep);
-    var hasDrop = Boolean(ctx.drop);
-
-    if (hasKeep && hasDrop) {
-        var matchedKeep = ctx.keep.test(title);
-        var matchedDrop = ctx.drop.test(title);
-        if (!matchedKeep) {
-            stats.unmatchedKeep++;
-            return false;
-        }
-        if (matchedDrop) {
-            stats.excluded++;
-            return false;
-        }
-        stats.kept++;
-        return true;
-    }
-
-    if (hasKeep) {
-        if (!ctx.keep.test(title)) {
-            stats.filtered++;
-            return false;
-        }
-        stats.kept++;
-        return true;
-    }
-
-    if (hasDrop) {
-        if (ctx.drop.test(title)) {
-            stats.excluded++;
-            return false;
-        }
-        stats.kept++;
-        return true;
-    }
-
-    stats.kept++;
-    return true;
-}
-
-function editName(rawTitle, ctx, stats) {
-    var title = String(rawTitle || "").trim();
-    if (!title) return "";
-
-    if (!checkFilter(title, ctx, stats)) return null;
-
-    if (ctx.wipe) {
-        title = title.replace(ctx.wipe, "");
-    }
-
-    if (ctx.emoji) {
-        title = dropEmoji(title);
-    }
-
-    for (var i = 0; i < ctx.renameRules.length; i++) {
-        title = replaceText(title, ctx.renameRules[i][0], ctx.renameRules[i][1]);
-    }
-
-    return title.replace(/\s{2,}/g, " ").trim();
-}
-
-function notifyFilter(ctx, stats) {
-    var hasKeep = Boolean(ctx.keep);
-    var hasDrop = Boolean(ctx.drop);
-    if (!hasKeep && !hasDrop) return;
-
-    if (hasKeep && hasDrop) {
-        nodeNote = "已保留 " + stats.kept + " 个节点 > 已排除 " + stats.excluded + " 个节点";
-    } else if (hasKeep) {
-        nodeNote = "已保留 " + stats.kept + " 个节点 > 过滤 " + stats.filtered + " 个节点";
-    } else if (hasDrop) {
-        nodeNote = "已排除 " + stats.excluded + " 个节点 > 保留 " + stats.kept + " 个节点";
-    }
-
-    postAlert(nodeNote);
-}
-
-function sortNodes(nodes, sortKeys) {
-    if (!sortKeys.length) return nodes;
-    nodes.sort(function (a, b) {
-        var rankA = sortKeys.length;
-        for (var x = 0; x < sortKeys.length; x++) {
-            if (a.name.indexOf(sortKeys[x]) > -1) {
-                rankA = x;
-                break;
-            }
-        }
-        var rankB = sortKeys.length;
-        for (var y = 0; y < sortKeys.length; y++) {
-            if (b.name.indexOf(sortKeys[y]) > -1) {
-                rankB = y;
-                break;
-            }
-        }
-        if (rankA !== rankB) return rankA - rankB;
-        return a.id - b.id;
-    });
-    return nodes;
-}
-
-function runNodes(entries) {
+function rename(entries) {
     if (!entries.length) return "";
 
-    var ctx = {
-        keep: makeRegex(keep, ""),
-        drop: makeRegex(drop, ""),
-        wipe: makeRegex(wipe, "g"),
-        renameRules: parseRenameMap(name),
-        emoji: emoji
-    };
+    var keepRe = null;
+    if (keep) {
+        try { keepRe = new RegExp(keep); } catch (_) { keepRe = null; }
+    }
 
-    var stats = {
-        kept: 0,
-        filtered: 0,
-        excluded: 0,
-        unmatchedKeep: 0
-    };
+    var dropRe = null;
+    if (drop) {
+        try { dropRe = new RegExp(drop); } catch (_) { dropRe = null; }
+    }
 
-    var sortKeys = parseSortKeys(sort);
-    var processed = [];
+    var wipeRe = null;
+    if (wipe) {
+        try { wipeRe = new RegExp(wipe, "g"); } catch (_) { wipeRe = null; }
+    }
 
-    for (var i = 0; i < entries.length; i++) {
-        var entry = entries[i];
+    var rules = [];
+    if (name) {
+        var arr = name.split("+");
+        for (var i = 0; i < arr.length; i++) {
+            var sep = arr[i].indexOf(":");
+            if (sep > -1) {
+                var src = arr[i].slice(0, sep).trim();
+                var dst = arr[i].slice(sep + 1).trim();
+                if (src.length > 0) {
+                    rules.push([src, dst]);
+                }
+            }
+        }
+    }
 
-        if (entry.kind === "native") {
-            var nextName = editName(entry.rawName, ctx, stats);
-            if (nextName === null || nextName === "") continue;
-            processed.push({
-                isNode: true,
-                text: nextName + " = " + entry.body,
-                name: nextName,
-                id: entry.id
-            });
-        } else if (entry.kind === "share") {
-            if (!entry.rawName) {
-                processed.push({ isNode: false, text: entry.line, id: entry.id });
+    function editTitle(rawTitle) {
+        var t = String(rawTitle || "").trim();
+        if (!t) return "";
+
+        if (keepRe && !keepRe.test(t)) return null;
+        if (dropRe && dropRe.test(t)) return null;
+        if (wipeRe) {
+            t = t.replace(wipeRe, "");
+        }
+        for (var i = 0; i < rules.length; i++) {
+            var rule = rules[i];
+            if (t && rule[0]) {
+                t = t.split(rule[0]).join(rule[1]);
+            }
+        }
+
+        return t.replace(/\s{2,}/g, " ").trim();
+    }
+
+    var out = [];
+    var kept = 0;
+    var excluded = 0;
+
+    for (var j = 0; j < entries.length; j++) {
+        var item = entries[j];
+
+        if (item.kind === "plain") {
+            var nextN = editTitle(item.rawName);
+            if (nextN === null || nextN === "") {
+                excluded++;
                 continue;
             }
-            var nextTitle = editName(entry.rawName, ctx, stats);
-            if (nextTitle === null || nextTitle === "") continue;
-            var encoded = encodeURIComponent(nextTitle);
-            var nextLine = entry.hasHash
-                ? entry.line.slice(0, entry.hashIndex + 1) + encoded
-                : entry.line + "#" + encoded;
-            processed.push({
-                isNode: true,
-                text: nextLine,
-                name: nextTitle,
-                id: entry.id
-            });
-        } else {
-            processed.push({ isNode: false, text: entry.text, id: entry.id });
+            out.push(item.body ? nextN + " = " + item.body : nextN);
+            kept++;
+        } else if (item.kind === "share") {
+            if (!item.rawName) {
+                if (keepRe) {
+                    excluded++;
+                    continue;
+                }
+                out.push(item.line);
+                kept++;
+                continue;
+            }
+            var nextN = editTitle(item.rawName);
+            if (nextN === null || nextN === "") {
+                excluded++;
+                continue;
+            }
+            var enc = encodeURIComponent(nextN);
+            out.push(
+                item.hasHash
+                    ? item.line.slice(0, item.hashIndex + 1) + enc
+                    : item.line + "#" + enc
+            );
+            kept++;
         }
     }
 
-    notifyFilter(ctx, stats);
-
-    var nodesOnly = [];
-    for (var j = 0; j < processed.length; j++) {
-        if (processed[j].isNode) nodesOnly.push(processed[j]);
+    if (note && (keep || drop)) {
+        $notification.post(
+            "资源解析器",
+            "",
+            "保留 " + kept + "个节点 >> 排除 " + excluded + "个节点"
+        );
     }
 
-    sortNodes(nodesOnly, sortKeys);
-
-    var result = [];
-    var cursor = 0;
-    for (var k = 0; k < processed.length; k++) {
-        if (processed[k].isNode) {
-            result.push(nodesOnly[cursor++].text);
-        } else {
-            result.push(processed[k].text);
-        }
-    }
-
-    return result.join("\n");
+    return out.join("\n");
 }
 
 (function main() {
-    loadArgs();
-    pullSub(function (rawText) {
+    param();
+    Reouest(function (contentText, fetchedByUa) {
+        var dec = base64(contentText);
         if (mode !== 1) {
-            flushLog();
-            $done(rawText);
+            $done(dec);
             return;
         }
-        var decodedText = decodeB64(rawText);
-        var entries = parseLines(decodedText);
-        var finalOutput = runNodes(entries);
-        flushLog();
-        $done(finalOutput);
+        var list = node(dec);
+        if (note && fetchedByUa) {
+            $notification.post(
+                "资源解析器",
+                "",
+                "使用新的UA拉取订阅共计 " + list.length + " 个节点"
+            );
+        }
+        var out = rename(list);
+        $done(out);
     });
 })();
