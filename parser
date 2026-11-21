@@ -10,7 +10,7 @@ drop = input,"",tag=排除节点,desc=仅排除匹配到的节点其余全部保
 wipe = input,"",tag=删除名称,desc=匹配到的节点名称字段将会被删除
 name = input,"",tag=重新命名,desc=格式 旧名:新名 多个分组使用 "+"
 ua   = switch,false,tag=获取订阅,desc=开启使用小火箭UA拉取订阅节点
-note = switch,false,tag=通知提醒,desc=控制解析器节点操作通知
+note = switch,false,tag=通知提醒,desc=控制解析器对节点操作通知提醒
 
 [Script]
 generic script-path=https://github.com/zjinkee/Loon/raw/refs/heads/main/js/parser.js, tag=解析器, timeout=15, argument=[{keep},{drop},{wipe},{name},{note},{ua}]
