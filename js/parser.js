@@ -249,7 +249,7 @@ function rename(entries) {
 
         $notification.post(
             "解析器",
-            "节点筛选结果",
+            "筛选⇣",
             "保留 " + kept + "个节点 ➟ 排除 " + excluded + "个节点"
         );
     }
@@ -270,7 +270,7 @@ function rename(entries) {
             $notification.post(
                 "解析器",
                 "",
-                "已启用替换UA请求拉取订阅节点共计 " + list.length + " 个节点"
+                "已启用替换UA请求拉取订阅共计 " + list.length + " 个节点"
             );
         }
         var out = rename(list);
